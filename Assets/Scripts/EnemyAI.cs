@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour
     NavMeshAgent agent;
     Transform target;
     Animator anim;
+    PlayerController playerController;
     public float lookRadius = 10f;
     public float speed = 3.5f;
     public float health = 20f;
@@ -18,6 +19,7 @@ public class EnemyAI : MonoBehaviour
     Vector3 startingVector;
     void Start()
     {
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.Find("Player");
@@ -45,11 +47,11 @@ public class EnemyAI : MonoBehaviour
 
             agent.speed = speed;
             Animations();
-            if (calculateDistance() <= lookRadius)
+            if (calculateDistance() <= lookRadius && !playerController.isDead())
             {
                 agent.SetDestination(target.position);
             }
-            if (calculateDistance() <= agent.stoppingDistance)
+            if (calculateDistance() <= agent.stoppingDistance && !playerController.isDead())
             {
                 anim.SetBool("isAttacking", true);
                 anim.SetBool("isIdle", false);
@@ -58,6 +60,10 @@ public class EnemyAI : MonoBehaviour
             else
             {
                 anim.SetBool("isAttacking", false);
+            }
+            if (calculateDistance() <= agent.stoppingDistance && playerController.isDead())
+            {
+                Patrol();
             }
         }
     }
@@ -74,7 +80,7 @@ public class EnemyAI : MonoBehaviour
     private void Animations()
     {
 
-        if (calculateDistance() <= lookRadius && calculateDistance() > agent.stoppingDistance)
+        if (calculateDistance() <= lookRadius && calculateDistance() > agent.stoppingDistance && !playerController.isDead())
         {
             speed = 3.5f;
             anim.SetBool("isIdle", false);

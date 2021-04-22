@@ -11,9 +11,11 @@ public class PlayerController : MonoBehaviour
     public float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
     public float speed = 4f;
+    public float maxSpeed = 5.5f;
     public int maxHealth = 100;
     public int currentHealth;
     public HealthBar healthBar;
+    private bool playerDead = false;
     private void Start()
     {
         currentHealth = maxHealth;
@@ -23,6 +25,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        isDead();
         if (currentHealth > 0)
         {
 
@@ -47,6 +50,23 @@ public class PlayerController : MonoBehaviour
                 controller.Move(moveDir.normalized * speed * Time.deltaTime);
             }
         }
+        else
+        {
+            
+        }
+
+    }
+    public bool isDead()
+    {
+        if (currentHealth > 0)
+        {
+            playerDead = false;
+        }
+        if (currentHealth <= 0)
+        {
+            playerDead = true;
+        }
+        return playerDead;
     }
     public void TakeDamage(int damage)
     {

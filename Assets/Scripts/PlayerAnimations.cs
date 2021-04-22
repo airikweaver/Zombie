@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class PlayerAnimations : MonoBehaviour
 {
-    bool sprint = false;
-    private float speed = 4f;
+    bool canSprint = true;
     Animator anim;
+    PlayerController player;
     private float health = 0;
+    public float sprintCooldown = 3;
+    public float sprintDuration = 3;
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.Find("Player").GetComponent<PlayerController>();
         anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        health = GameObject.Find("Player").GetComponent<PlayerController>().currentHealth;
+        health = player.currentHealth;
         Animations();
     }
     void CanDie()
@@ -27,21 +29,24 @@ public class PlayerAnimations : MonoBehaviour
     }
     public void IsSprinting()
     {
-        if (!sprint && Input.GetKey(KeyCode.LeftShift))
+        if (canSprint && Input.GetKey(KeyCode.LeftShift) && !player.isDead())
         {
-            sprint = true;
-            speed += 1f;
+            canSprint = false;
+            player.speed += 1.5f;
+            anim.SetBool("isSprinting", true);
         }
-        else if (sprint && Input.GetKeyUp(KeyCode.LeftShift))
+        if (!canSprint && Input.GetKeyUp(KeyCode.LeftShift) && !player.isDead())
         {
-            sprint = false;
-            speed -= 1f;
+            canSprint = true;
+            player.speed -= 1.5f;
+            anim.SetBool("isSprinting", false);
         }
     }
+  
     public void AnimationSpeed()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal") * speed;
-        float vertical = Input.GetAxisRaw("Vertical") * speed;
+        float horizontal = Input.GetAxisRaw("Horizontal") * player.speed;
+        float vertical = Input.GetAxisRaw("Vertical") * player.speed;
 
         horizontal = Mathf.Abs(horizontal);
         vertical = Mathf.Abs(vertical);
@@ -66,5 +71,6 @@ public class PlayerAnimations : MonoBehaviour
         IsSprinting();
         AnimationSpeed();
     }
+   
 }
 

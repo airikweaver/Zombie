@@ -7,15 +7,21 @@ public class EnemyAttack : MonoBehaviour
     public float enemyCooldown = 0.5f;
     public int damage = 5;
 
+    PlayerController player;
     private bool playerInRange = false;
     private bool canAttack = true;
 
+    private void Start()
+    {
+        player = GameObject.Find("Player").GetComponent<PlayerController>();
+    }
     // Update is called once per frame
     void Update()
     {
-        if (playerInRange && canAttack)
+        if (playerInRange && canAttack && !player.isDead())
         {
-            GameObject.Find("Player").GetComponent<PlayerController>().TakeDamage(damage);
+            FindObjectOfType<AudioManager>().Play("ZombieAttack");
+            player.TakeDamage(damage);
             StartCoroutine(AttackCooldown());
         }
     }

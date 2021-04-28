@@ -33,7 +33,7 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         bool isDead = anim.GetBool("isDead");
-        if (isDead == false)
+        if (!isDead)
         {
             if (calculateDistance() > lookRadius)
             {
@@ -51,20 +51,11 @@ public class EnemyAI : MonoBehaviour
             {
                 agent.SetDestination(target.position);
             }
-            if (calculateDistance() <= agent.stoppingDistance && !playerController.isDead())
-            {
-                anim.SetBool("isAttacking", true);
-                anim.SetBool("isIdle", false);
-                FaceTarget();
-            }
-            else
-            {
-                anim.SetBool("isAttacking", false);
-            }
-            if (calculateDistance() <= agent.stoppingDistance && playerController.isDead())
-            {
-                Patrol();
-            }
+            
+        }
+        else
+        {
+            Patrol();
         }
     }
 
@@ -102,9 +93,18 @@ public class EnemyAI : MonoBehaviour
             anim.SetBool("isIdle", true);
             anim.SetBool("isRunning", false);
         }
+        if (calculateDistance() <= agent.stoppingDistance && !playerController.isDead())
+        {
+            anim.SetBool("isAttacking", true);
+            anim.SetBool("isIdle", false);
+            FaceTarget();
+        }
+        else
+        {
+            anim.SetBool("isAttacking", false);
+        }
 
 
-        
 
 
     }

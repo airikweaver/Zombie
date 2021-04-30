@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerAnimations : MonoBehaviour
 {
@@ -29,20 +27,20 @@ public class PlayerAnimations : MonoBehaviour
     }
     public void IsSprinting()
     {
-        if (canSprint && Input.GetKey(KeyCode.LeftShift) && !player.isDead())
+        if (canSprint && Input.GetKey(KeyCode.LeftShift))
         {
             canSprint = false;
             player.speed += 1.5f;
             anim.SetBool("isSprinting", true);
         }
-        if (!canSprint && Input.GetKeyUp(KeyCode.LeftShift) && !player.isDead())
+        if (!canSprint && Input.GetKeyUp(KeyCode.LeftShift))
         {
             canSprint = true;
             player.speed -= 1.5f;
             anim.SetBool("isSprinting", false);
         }
     }
-  
+
     public void AnimationSpeed()
     {
         float horizontal = Input.GetAxisRaw("Horizontal") * player.speed;
@@ -70,7 +68,17 @@ public class PlayerAnimations : MonoBehaviour
         CanDie();
         IsSprinting();
         AnimationSpeed();
+        PlayerDead();
     }
-   
+    public void PlayerDead()
+    {
+        if (player.isDead())
+        {
+            anim.SetFloat("Speed", 0);
+            anim.SetBool("isSprinting", false);
+        }
+
+    }
+
 }
 

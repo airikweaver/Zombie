@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
@@ -26,7 +24,7 @@ public class EnemyAI : MonoBehaviour
         target = player.transform;
         startingVector = transform.position;
         waitTime = startWaitTime;
-        moveSpot.position = new Vector3(Random.Range(startingVector.x + 10, startingVector.x -10), 0, Random.Range(startingVector.z + 10, startingVector.z - 10));
+        moveSpot.position = new Vector3(Random.Range(startingVector.x + 10, startingVector.x - 10), 0, Random.Range(startingVector.z + 10, startingVector.z - 10));
 
     }
 
@@ -51,7 +49,7 @@ public class EnemyAI : MonoBehaviour
             {
                 agent.SetDestination(target.position);
             }
-            
+
         }
         else
         {
@@ -67,7 +65,7 @@ public class EnemyAI : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
-    
+
     private void Animations()
     {
 
@@ -116,7 +114,7 @@ public class EnemyAI : MonoBehaviour
         {
             if (waitTime <= 0)
             {
-               
+
                 moveSpot.position = new Vector3(Random.Range(startingVector.x + 10, startingVector.x - 10), 0, Random.Range(startingVector.z + 10, startingVector.z - 10));
                 waitTime = startWaitTime;
             }

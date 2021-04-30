@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,12 +8,14 @@ public class PlayerController : MonoBehaviour
 
     public float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
-    public float speed = 4f;
     public float maxSpeed = 5.5f;
     public int maxHealth = 100;
-    public int currentHealth;
     public HealthBar healthBar;
-    private bool playerDead = false;
+    [Header("Info")]
+    [SerializeField] float Gravity = 9.85f;
+    [SerializeField] bool playerDead = false;
+     public int currentHealth;
+     public float speed = 4f;
     private void Start()
     {
         currentHealth = maxHealth;
@@ -28,33 +28,35 @@ public class PlayerController : MonoBehaviour
         isDead();
         if (currentHealth > 0)
         {
-
-
-
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");
-
-
-            Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
-            if (direction.magnitude >= 0.1f)
-            {
-                float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-
-                transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-                Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-
-
-                controller.Move(moveDir.normalized * speed * Time.deltaTime);
-            }
+            Move();
+            DoGravity();
         }
-        else
+
+    }
+    public void DoGravity()
+    {
+        controller.Move(Vector3.down * Gravity * Time.deltaTime);
+    }
+    public void Move()
+    {
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+        if (direction.magnitude >= 0.1f)
         {
-            
-        }
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
 
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+
+            controller.Move(moveDir.normalized * speed * Time.deltaTime);
+
+        }
     }
     public bool isDead()
     {

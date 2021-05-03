@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - canGrab
+  - Sign
   layers:
   - Default
   - TransparentFX

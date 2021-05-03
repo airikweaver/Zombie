@@ -7,7 +7,10 @@ public class BillBoard : MonoBehaviour
     private void Start()
     {
         cam = GameObject.FindGameObjectWithTag("MainCamera");
+        
+        
     }
+
     private void LateUpdate()
     {
         transform.LookAt(transform.position + cam.transform.forward);

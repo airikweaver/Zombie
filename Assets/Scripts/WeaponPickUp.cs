@@ -1,27 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-public class WeaponPickUp : FindClosestItem
+public class WeaponPickUp : MonoBehaviour
 {
-    public Transform equipPosition;
-
-
-    GameObject weapon;
-    GameObject currentWeapon;
-    PlayerController playerController;
-    bool canGrab = true;
-    public bool inRange = false;
-    GameObject clone;
+    
 
 
     
+    [Header("Visuals")]
+    public GameObject weapon;
+    GameObject currentWeapon;
+    PlayerController playerController;
+    public bool canGrab = true;
+    public bool inRange = false;
+    public Transform equipPosition;
 
     [Header("References")]
     public GameObject PressEPrefab;
-    [SerializeField] GameObject[] objs;
+    public GameObject[] objs;
     public Rig armRig1;
     public Rig armRig2;
-    [SerializeField] GameObject closestItem = null;
+
 
     [Header("Settings")]
     public float RangeToGrab = 2f;
@@ -35,7 +34,6 @@ public class WeaponPickUp : FindClosestItem
     }
     private void Update()
     {
-        FindClosestItem();
         if (playerController.isDead())
         {
             Drop();
@@ -44,16 +42,13 @@ public class WeaponPickUp : FindClosestItem
         {
             if (Input.GetKeyDown(KeyCode.E) && canGrab)
             {
-
                 if (currentWeapon != null)
                 {
                     Drop();
                 }
                 Pickup();
-
             }
         }
-
         if (currentWeapon != null)
         {
             if (Input.GetKeyDown(KeyCode.Q) && !canGrab)
@@ -62,12 +57,11 @@ public class WeaponPickUp : FindClosestItem
                 Drop();
             }
         }
-
     }
     public bool IsInRange()
     {
         dist = Vector3.Distance(transform.position, weapon.transform.position);
-        if (dist < RangeToGrab)
+        if (dist < RangeToGrab && canGrab)
         {
             return inRange = true;
         }
@@ -76,28 +70,6 @@ public class WeaponPickUp : FindClosestItem
             return inRange = false;
         }
     }
-    void FindClosestItem()
-    {
-        float distanceToItem;
-        float distanceToClosestItem = Mathf.Infinity;
-        GameObject[] allItems = GameObject.FindGameObjectsWithTag("canGrab");
-
-        foreach (GameObject currentItem in allItems)
-        {
-            clone = Instantiate(PressEPrefab, currentItem.transform.position, Quaternion.identity);
-            Destroy(clone);
-            distanceToItem = (currentItem.transform.position - this.transform.position).sqrMagnitude;
-            if (distanceToItem < distanceToClosestItem)
-            {
-                distanceToClosestItem = distanceToItem;
-                closestItem = currentItem;
-                weapon = currentItem;
-            }
-        }
-        Debug.DrawLine(this.transform.position, closestItem.transform.position);
-    }
-
-
     public void Pickup()
     {
         armRig1.weight = 1;
@@ -113,13 +85,10 @@ public class WeaponPickUp : FindClosestItem
     {
         armRig1.weight = 0;
         armRig2.weight = 0;
-        if (!playerController.isDead())
-        {
             currentWeapon.transform.parent = null;
             currentWeapon.GetComponent<Rigidbody>().isKinematic = false;
             currentWeapon = null;
             canGrab = true;
-        }
     }
 
     private void OnDrawGizmosSelected()

@@ -168,7 +168,7 @@ GameObject:
   - component: {fileID: 3566157233268900562}
   m_Layer: 5
   m_Name: PressE
-  m_TagString: Untagged
+  m_TagString: Sign
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -190,7 +190,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.903, y: 0.81}
+  m_AnchoredPosition: {x: -0.90301514, y: 0.80999756}
   m_SizeDelta: {x: 247.31787, y: 34.677185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &3566157233268900588

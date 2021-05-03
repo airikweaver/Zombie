@@ -10,13 +10,16 @@ public class EnemyAI : MonoBehaviour
     PlayerController playerController;
     public float lookRadius = 10f;
     public float speed = 3.5f;
-    public float health = 20f;
+    public int startingHealth = 20;
+    public int currentHealth;
     private float waitTime;
     public float startWaitTime;
     public Transform moveSpot;
     Vector3 startingVector;
+    public HealthBar healthBar;
     void Start()
     {
+        currentHealth = startingHealth;
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
@@ -27,7 +30,15 @@ public class EnemyAI : MonoBehaviour
         moveSpot.position = new Vector3(Random.Range(startingVector.x + 10, startingVector.x - 10), 0, Random.Range(startingVector.z + 10, startingVector.z - 10));
 
     }
-
+    public void TakeDamage(int Damage)
+    {
+        currentHealth -= Damage;
+        healthBar.SetHealth(currentHealth);
+        if (currentHealth <= 0)
+        {
+            //Die();
+        }
+    }
     void Update()
     {
         bool isDead = anim.GetBool("isDead");
@@ -38,7 +49,7 @@ public class EnemyAI : MonoBehaviour
                 Patrol();
             }
 
-            if (health <= 0)
+            if (currentHealth <= 0)
             {
                 anim.SetBool("isDead", true);
             }

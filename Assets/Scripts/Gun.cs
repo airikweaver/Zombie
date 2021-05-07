@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Gun : MonoBehaviour
 {
+
     Pistol pistol;
     WeaponPickUp weaponPickUp;
     public GameObject muzzleFlash;
@@ -56,6 +57,7 @@ public class Gun : MonoBehaviour
 
         if (CheckIfEquipped() && WeaponAmmoBeingUsed() > 0)
         {
+            FindObjectOfType<AudioManager>().Play("M1911 Gunshot");
             SubtractAmmoFromWeapon();
             Debug.DrawRay(firePoint.transform.position, firePoint.transform.forward * 100, Color.red, 2f);
             Ray ray = new Ray(firePoint.position, firePoint.forward);
@@ -64,8 +66,7 @@ public class Gun : MonoBehaviour
             {
                 var health = hitInfo.collider.GetComponent<EnemyAI>();
                 Instantiate(bulletCollision, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                Instantiate(muzzleFlash, firePoint.position + new Vector3(0, 0, 0.35f), Quaternion.LookRotation(hitInfo.normal));
-
+                Instantiate(muzzleFlash, weaponPickUp.currentWeapon.transform.position, Quaternion.identity, transform);
                 if (health != null)
                 {
                     health.TakeDamage(WeaponDamage());
@@ -108,6 +109,17 @@ public class Gun : MonoBehaviour
         if (weaponPickUp.weapon.name == "M1911")
         {
             return pistol.currentAmmo;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    public float WeaponReloadSpeed()
+    {
+        if (weaponPickUp.weapon.name == "M1911")
+        {
+            return pistol.reloadTime;
         }
         else
         {

@@ -11,20 +11,24 @@ public class ReloadBarUI : MonoBehaviour
     public Transform TextIndicator;
     public Transform TextReloading;
     [SerializeField] private float fillSpeed;
+    [SerializeField] private float currentAmount;
     // Start is called before the first frame update
     void Start()
     {
         weaponPickUp = GameObject.Find("Player").GetComponent<WeaponPickUp>();
         gun = GameObject.Find("Player").GetComponent<Gun>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        currentAmount = gun.WeaponAmmoBeingUsed();
+        
         if (weaponPickUp.currentWeapon != null)
         {
-            TextIndicator.GetComponent<Text>().text = gun.WeaponAmmoBeingUsed().ToString();
-            if (gun.WeaponAmmoBeingUsed() <= 0)
+            TextIndicator.GetComponent<Text>().text = currentAmount.ToString();
+            if (currentAmount <= 0)
             {
                 TextReloading.gameObject.SetActive(true);
             }
@@ -32,7 +36,7 @@ public class ReloadBarUI : MonoBehaviour
             {
                 TextReloading.gameObject.SetActive(false);
             }
-            LoadingBar.GetComponent<Image>().fillAmount = gun.WeaponAmmoBeingUsed() / 10;
+            LoadingBar.GetComponent<Image>().fillAmount = currentAmount / 10;
         }
         
     }

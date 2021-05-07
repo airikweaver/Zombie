@@ -8,7 +8,7 @@ public class Pistol : MonoBehaviour
 
     [Range(0, 10)] public int damage;
     public float fireRate = 0.5f;
-    public float reloadTime = 2f;
+    public float reloadTime = 3f;
     public float range = 100f;
     public int maxAmmo = 10;
     public float currentAmmo;

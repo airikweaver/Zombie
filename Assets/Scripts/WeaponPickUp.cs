@@ -20,7 +20,7 @@ public class WeaponPickUp : MonoBehaviour
     public GameObject[] objs;
     public Rig armRig1;
     public Rig armRig2;
-
+    public Transform ReloadUI;
 
     [Header("Settings")]
     public float RangeToGrab = 2f;
@@ -30,6 +30,7 @@ public class WeaponPickUp : MonoBehaviour
 
     private void Start()
     {
+        ReloadUI.gameObject.SetActive(false);
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
     }
     private void Update()
@@ -71,6 +72,7 @@ public class WeaponPickUp : MonoBehaviour
     }
     public void Pickup()
     {
+        ReloadUI.gameObject.SetActive(true);
         playSoundOnPickup();
         armRig1.weight = 1;
         armRig2.weight = 1;
@@ -90,6 +92,7 @@ public class WeaponPickUp : MonoBehaviour
     }
     public void Drop()
     {
+        ReloadUI.gameObject.SetActive(false);
         armRig1.weight = 0;
         armRig2.weight = 0;
         currentWeapon.transform.parent = null;

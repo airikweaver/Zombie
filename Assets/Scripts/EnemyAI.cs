@@ -3,20 +3,28 @@ using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {
+    [Header("Info")]
     private GameObject player;
     NavMeshAgent agent;
+    PlayerController playerController;
     Transform target;
     Animator anim;
-    PlayerController playerController;
-    public float lookRadius = 10f;
-    public float speed = 3.5f;
-    public int startingHealth = 20;
-    public int currentHealth;
-    private float waitTime;
-    public float startWaitTime;
     public Transform moveSpot;
     Vector3 startingVector;
     public HealthBar healthBar;
+
+    [Header("Settings")]
+    public float lookRadius = 10f;
+    public float speed = 3.5f;
+    public int startingHealth = 20;
+
+    [Header("Visualization")]
+    public int currentHealth;
+    private float waitTime;
+    public float startWaitTime;
+    public bool isDead = false;
+
+
     void Start()
     {
         currentHealth = startingHealth;
@@ -36,57 +44,44 @@ public class EnemyAI : MonoBehaviour
         healthBar.SetHealth(currentHealth);
         if (currentHealth <= 0)
         {
-            //Die();
+            anim.SetBool("isDead", true);
+            isDead = true;
         }
     }
     void Update()
     {
-        bool isDead = anim.GetBool("isDead");
         if (!isDead)
         {
             if (calculateDistance() > lookRadius)
             {
                 Patrol();
             }
-
-            if (currentHealth <= 0)
-            {
-                anim.SetBool("isDead", true);
-            }
-
             agent.speed = speed;
             Animations();
             if (calculateDistance() <= lookRadius && !playerController.isDead())
             {
                 agent.SetDestination(target.position);
             }
-
         }
         else
         {
-            Patrol();
+            speed = 0;
         }
     }
-
-
     void FaceTarget()
     {
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
-
-
     private void Animations()
     {
-
         if (calculateDistance() <= lookRadius && calculateDistance() > agent.stoppingDistance && !playerController.isDead())
         {
             speed = 3.5f;
             anim.SetBool("isIdle", false);
             anim.SetBool("isRunning", true);
             anim.SetBool("isWalking", false);
-
         }
         else if (Vector3.Distance(transform.position, moveSpot.position) > 0.2f)
         {
@@ -112,10 +107,6 @@ public class EnemyAI : MonoBehaviour
         {
             anim.SetBool("isAttacking", false);
         }
-
-
-
-
     }
     private void Patrol()
     {
@@ -125,7 +116,6 @@ public class EnemyAI : MonoBehaviour
         {
             if (waitTime <= 0)
             {
-
                 moveSpot.position = new Vector3(Random.Range(startingVector.x + 10, startingVector.x - 10), 0, Random.Range(startingVector.z + 10, startingVector.z - 10));
                 waitTime = startWaitTime;
             }
@@ -133,7 +123,6 @@ public class EnemyAI : MonoBehaviour
             {
                 waitTime -= Time.deltaTime;
             }
-
         }
     }
     void FaceTargetPoint()
@@ -142,14 +131,11 @@ public class EnemyAI : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
-
-
     private float calculateDistance()
     {
         float distance = Vector3.Distance(target.position, transform.position);
         return distance;
     }
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.magenta;

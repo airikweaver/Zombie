@@ -3,21 +3,26 @@ using UnityEngine;
 
 public class EnemyAttack : MonoBehaviour
 {
+
+    [Header("References")]
+    PlayerController player;
+    EnemyAI enemyAI;
+
+    [Header("Settings")]
     public float enemyCooldown = 0.5f;
     public int damage = 5;
-
-    PlayerController player;
-    private bool playerInRange = false;
-    private bool canAttack = true;
+    [SerializeField] bool playerInRange = false;
+    [SerializeField] private bool canAttack = true;
 
     private void Start()
     {
+        enemyAI = GetComponent<EnemyAI>();
         player = GameObject.Find("Player").GetComponent<PlayerController>();
     }
     // Update is called once per frame
     void Update()
     {
-        if (playerInRange && canAttack && !player.isDead())
+        if (playerInRange && canAttack && !player.isDead() && !enemyAI.isDead)
         {
             FindObjectOfType<AudioManager>().Play("ZombieAttack");
             player.TakeDamage(damage);

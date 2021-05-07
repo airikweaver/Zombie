@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FindClosestItem : MonoBehaviour
 {
@@ -12,13 +10,11 @@ public class FindClosestItem : MonoBehaviour
     {
         weaponPickUp = GetComponent<WeaponPickUp>();
     }
-
     // Update is called once per frame
     void Update()
     {
         ClosestItem();
     }
-
     void ClosestItem()
     {
         float distanceToItem;
@@ -36,6 +32,10 @@ public class FindClosestItem : MonoBehaviour
                 weaponPickUp.weapon = currentItem;
             }
         }
-        Debug.DrawLine(this.transform.position, closestItem.transform.position);
+        if (closestItem != null)
+        {
+            Debug.DrawLine(this.transform.position, closestItem.transform.position);
+        }
+        
     }
 }

@@ -3,13 +3,13 @@ using UnityEngine.Animations.Rigging;
 
 public class WeaponPickUp : MonoBehaviour
 {
-    
 
 
-    
-    [Header("Visuals")]
+
+
+    [Header("Info")]
     public GameObject weapon;
-    GameObject currentWeapon;
+    public GameObject currentWeapon;
     PlayerController playerController;
     public bool canGrab = true;
     public bool inRange = false;
@@ -34,44 +34,44 @@ public class WeaponPickUp : MonoBehaviour
     }
     private void Update()
     {
-        if (playerController.isDead())
-        {
-            Drop();
-        }
-        if (IsInRange())
+        //if (playerController.isDead())
+        //{
+        //Drop();
+        //}
+        if (weapon != null)
         {
             if (Input.GetKeyDown(KeyCode.E) && canGrab)
             {
-                if (currentWeapon != null)
-                {
-                    Drop();
-                }
                 Pickup();
             }
         }
-        if (currentWeapon != null)
+        if (weapon != null)
         {
             if (Input.GetKeyDown(KeyCode.Q) && !canGrab)
             {
-
                 Drop();
             }
         }
+        
     }
     public bool IsInRange()
     {
+
         dist = Vector3.Distance(transform.position, weapon.transform.position);
         if (dist < RangeToGrab && canGrab)
         {
-            return inRange = true;
+            inRange = true;
         }
         else
         {
-            return inRange = false;
+            inRange = false;
         }
+        return inRange;
+
     }
     public void Pickup()
     {
+        playSoundOnPickup();
         armRig1.weight = 1;
         armRig2.weight = 1;
         currentWeapon = weapon;
@@ -81,14 +81,21 @@ public class WeaponPickUp : MonoBehaviour
         currentWeapon.GetComponent<Rigidbody>().isKinematic = true;
         canGrab = false;
     }
+    public void playSoundOnPickup()
+    {
+        if (weapon.name == "M1911")
+        {
+            FindObjectOfType<AudioManager>().Play("Weapon Cock");
+        }
+    }
     public void Drop()
     {
         armRig1.weight = 0;
         armRig2.weight = 0;
-            currentWeapon.transform.parent = null;
-            currentWeapon.GetComponent<Rigidbody>().isKinematic = false;
-            currentWeapon = null;
-            canGrab = true;
+        currentWeapon.transform.parent = null;
+        currentWeapon.GetComponent<Rigidbody>().isKinematic = false;
+        currentWeapon = null;
+        canGrab = true;
     }
 
     private void OnDrawGizmosSelected()

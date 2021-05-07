@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PressESigns : MonoBehaviour
 {
@@ -13,7 +11,10 @@ public class PressESigns : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Signs();   
+        if (weaponPickUp.weapon != null)
+        {
+            Signs();
+        }
     }
     void Signs()
     {
@@ -21,16 +22,11 @@ public class PressESigns : MonoBehaviour
         int SignCount = GameObject.FindGameObjectsWithTag("Sign").Length;
         if (weaponPickUp.IsInRange())
         {
-            if (SignCount <= 0)
+            if (SignCount <= 0 && weaponPickUp.weapon != null)
             {
-              
-                
-                    
-                    Instantiate(weaponPickUp.PressEPrefab, weaponPickUp.weapon.transform.position + new Vector3(0, 1, 0), Quaternion.identity);
-                
-                
+                Instantiate(weaponPickUp.PressEPrefab, weaponPickUp.weapon.transform.position + new Vector3(0, 1, 0), Quaternion.identity);
             }
-                
+
         }
         else
         {

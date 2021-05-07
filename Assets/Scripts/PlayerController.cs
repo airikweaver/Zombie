@@ -2,31 +2,33 @@
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("References")]
     public CharacterController controller;
     public Transform cam;
+    public HealthBar healthBar;
 
 
+    [Header("Settings")]
+    public float speed = 4f;
     public float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
     public float maxSpeed = 5.5f;
     public int maxHealth = 100;
-    public HealthBar healthBar;
+
     [Header("Info")]
-    [SerializeField] float Gravity = 9.85f;
-    [SerializeField] bool playerDead = false;
-     public int currentHealth;
-     public float speed = 4f;
+    [SerializeField] private float Gravity = 9.85f;
+    [SerializeField] private bool playerDead = false;
+    [SerializeField] public int currentHealth;
+
     private void Start()
     {
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
-
     }
     // Update is called once per frame
     void Update()
     {
-        isDead();
-        if (currentHealth > 0)
+        if (!isDead())
         {
             Move();
             DoGravity();
